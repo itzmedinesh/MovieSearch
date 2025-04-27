@@ -1,5 +1,3 @@
-Here's an updated README with comprehensive project details:
-
 # MovieSearch
 
 A service for searching and browsing movies by city, theaters, genre, language, and location. This application leverages DynamoDB for data storage with geospatial querying capabilities.
