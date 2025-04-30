@@ -18,10 +18,20 @@ public class MovieSearchApplication {
     }
 
     @Bean
+    @Profile("!cloud")
     public DynamoDbClient initDynamoDB(@Value("${dynamodb.endpoint}") String dynamoDbEndpoint, @Value("${dynamodb.region}") String awsRegion) {
         // Create a DynamoDB client with local endpoint
         return DynamoDbClient.builder()
                 .endpointOverride(URI.create(dynamoDbEndpoint))
+                .region(Region.of(awsRegion))
+                .build();
+    }
+
+    @Bean
+    @Profile("cloud")
+    public DynamoDbClient initDynamoDB(@Value("${dynamodb.endpoint}") String dynamoDbEndpoint, @Value("${dynamodb.region}") String awsRegion) {
+        // Create a DynamoDB client with right aws region
+        return DynamoDbClient.builder()
                 .region(Region.of(awsRegion))
                 .build();
     }
