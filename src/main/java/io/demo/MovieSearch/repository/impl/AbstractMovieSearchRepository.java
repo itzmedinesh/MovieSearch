@@ -70,20 +70,12 @@ public abstract class AbstractMovieSearchRepository {
         EnhancedGlobalSecondaryIndex cityIndex = EnhancedGlobalSecondaryIndex.builder()
                 .indexName("CityIndex")
                 .projection(p -> p.projectionType(ProjectionType.ALL))
-                .provisionedThroughput(b -> b
-                        .readCapacityUnits(5L)
-                        .writeCapacityUnits(5L)
-                        .build())
                 .build();
 
         // Define GSI for theatre  based queries
         EnhancedGlobalSecondaryIndex theatreIndex = EnhancedGlobalSecondaryIndex.builder()
                 .indexName("TheatreIndex")
                 .projection(p -> p.projectionType(ProjectionType.ALL))
-                .provisionedThroughput(b -> b
-                        .readCapacityUnits(5L)
-                        .writeCapacityUnits(5L)
-                        .build())
                 .build();
 
 
@@ -91,20 +83,12 @@ public abstract class AbstractMovieSearchRepository {
         EnhancedGlobalSecondaryIndex movieNameIndex = EnhancedGlobalSecondaryIndex.builder()
                 .indexName("MovieNameIndex")
                 .projection(p -> p.projectionType(ProjectionType.ALL))
-                .provisionedThroughput(b -> b
-                        .readCapacityUnits(5L)
-                        .writeCapacityUnits(5L)
-                        .build())
                 .build();
 
         // Define GSI for movie language based queries
         EnhancedGlobalSecondaryIndex movieLanguageIndex = EnhancedGlobalSecondaryIndex.builder()
                 .indexName("MovieLanguageIndex")
                 .projection(p -> p.projectionType(ProjectionType.ALL))
-                .provisionedThroughput(b -> b
-                        .readCapacityUnits(5L)
-                        .writeCapacityUnits(5L)
-                        .build())
                 .build();
 
 
@@ -112,19 +96,13 @@ public abstract class AbstractMovieSearchRepository {
         EnhancedGlobalSecondaryIndex movieFormateIndex = EnhancedGlobalSecondaryIndex.builder()
                 .indexName("MovieFormatIndex")
                 .projection(p -> p.projectionType(ProjectionType.ALL))
-                .provisionedThroughput(b -> b
-                        .readCapacityUnits(5L)
-                        .writeCapacityUnits(5L)
-                        .build())
                 .build();
 
         // Create the table with the GSI
         CreateTableEnhancedRequest request = CreateTableEnhancedRequest.builder()
+                .billingMode(BillingMode.PAY_PER_REQUEST)
+                .tableClass(TableClass.STANDARD_INFREQUENT_ACCESS)
                 .globalSecondaryIndices(cityIndex, theatreIndex, movieNameIndex, movieLanguageIndex, movieFormateIndex)
-                .provisionedThroughput(b -> b
-                        .readCapacityUnits(5L)
-                        .writeCapacityUnits(5L)
-                        .build())
                 .build();
 
         table.createTable(request);
