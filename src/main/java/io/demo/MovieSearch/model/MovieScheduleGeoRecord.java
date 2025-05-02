@@ -31,9 +31,7 @@ public class MovieScheduleGeoRecord {
     }
 
     @DynamoDbSecondaryPartitionKey(indexNames = {"CityIndex"})
-    public String getCity() {
-        return city;
-    }
+    public String getCity() { return city; }
 
     @DynamoDbSortKey
     @DynamoDbSecondaryPartitionKey(indexNames = {"TheatreIndex"})

@@ -60,39 +60,32 @@ public abstract class AbstractMovieSearchRepository {
      * Creates the DynamoDB table with required schema and indexes.
      *
      * @param enhancedClient The DynamoDB enhanced client
-     * @return The created DynamoDB table
      */
-    protected DynamoDbTable<MovieScheduleGeoRecord> createTable(DynamoDbEnhancedClient enhancedClient, String TABLE_NAME) {
+    protected void createTable(DynamoDbEnhancedClient enhancedClient, String TABLE_NAME) {
         this.table = enhancedClient.table(TABLE_NAME,
                 TableSchema.fromBean(MovieScheduleGeoRecord.class));
 
-        // Define GSI for city-based queries
+        // Set projections for the global secondary indexes
         EnhancedGlobalSecondaryIndex cityIndex = EnhancedGlobalSecondaryIndex.builder()
                 .indexName("CityIndex")
                 .projection(p -> p.projectionType(ProjectionType.ALL))
                 .build();
 
-        // Define GSI for theatre  based queries
         EnhancedGlobalSecondaryIndex theatreIndex = EnhancedGlobalSecondaryIndex.builder()
                 .indexName("TheatreIndex")
                 .projection(p -> p.projectionType(ProjectionType.ALL))
                 .build();
 
-
-        // Define GSI for movie name based queries
         EnhancedGlobalSecondaryIndex movieNameIndex = EnhancedGlobalSecondaryIndex.builder()
                 .indexName("MovieNameIndex")
                 .projection(p -> p.projectionType(ProjectionType.ALL))
                 .build();
 
-        // Define GSI for movie language based queries
         EnhancedGlobalSecondaryIndex movieLanguageIndex = EnhancedGlobalSecondaryIndex.builder()
                 .indexName("MovieLanguageIndex")
                 .projection(p -> p.projectionType(ProjectionType.ALL))
                 .build();
 
-
-        // Define GSI for movie formate based queries
         EnhancedGlobalSecondaryIndex movieFormateIndex = EnhancedGlobalSecondaryIndex.builder()
                 .indexName("MovieFormatIndex")
                 .projection(p -> p.projectionType(ProjectionType.ALL))
@@ -100,13 +93,10 @@ public abstract class AbstractMovieSearchRepository {
 
         // Create the table with the GSI
         CreateTableEnhancedRequest request = CreateTableEnhancedRequest.builder()
-                .billingMode(BillingMode.PAY_PER_REQUEST)
-                .tableClass(TableClass.STANDARD_INFREQUENT_ACCESS)
                 .globalSecondaryIndices(cityIndex, theatreIndex, movieNameIndex, movieLanguageIndex, movieFormateIndex)
                 .build();
 
         table.createTable(request);
-        return table;
     }
 
     /**
